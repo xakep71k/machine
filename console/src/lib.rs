@@ -23,27 +23,6 @@ pub enum Argument {
     Error { message: String },
 }
 
-pub fn check_for_errors(v: Vec<Argument>) {
-    v.iter().for_each(|x| {
-        if let Argument::Error { message } = x {
-            eprintln!("{}", message);
-        }
-    });
-    let errors_exist = v.iter().any(|x| matches!(x, Argument::Error { .. }));
-    if errors_exist {
-        eprintln!("see --help");
-        std::process::exit(1);
-    }
-    let show_help = v.is_empty() || v.iter().any(|x| matches!(x, Argument::Help));
-    if show_help {
-        if v.is_empty() {
-            eprintln!("no option specified");
-        }
-        print_help();
-        std::process::exit(0);
-    }
-}
-
 pub fn parse() -> Vec<Argument> {
     let mut args = std::env::args();
     let _program_name: String = args.next().unwrap();
@@ -72,7 +51,29 @@ pub fn parse() -> Vec<Argument> {
             }
         }
     }
+    check_for_errors(&result);
     result
+}
+
+fn check_for_errors(v: &Vec<Argument>) {
+    v.iter().for_each(|x| {
+        if let Argument::Error { message } = x {
+            eprintln!("{}", message);
+        }
+    });
+    let errors_exist = v.iter().any(|x| matches!(x, Argument::Error { .. }));
+    if errors_exist {
+        eprintln!("see --help");
+        std::process::exit(1);
+    }
+    let show_help = v.is_empty() || v.iter().any(|x| matches!(x, Argument::Help));
+    if show_help {
+        if v.is_empty() {
+            eprintln!("no option specified");
+        }
+        print_help();
+        std::process::exit(0);
+    }
 }
 
 pub fn print_help() {

@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
-    "cmd",
+    "commands",
+    "console",
     "um3",
 ]
