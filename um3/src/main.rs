@@ -1,5 +1,4 @@
-mod command_line;
-// use num::bigint::BigInt;
+use cmd;
 
 fn main() {
     // let args = std::env::args().collect::<Vec<String>>();
@@ -7,7 +6,6 @@ fn main() {
     //     Ok(n) => println!("{}", n),
     //     Err(_) => println!("Error"),
     // }
-    let opts = command_line::parse();
-    println!("=== {:?}", opts);
-    command_line::inform_about_errors(opts);
+    let opts = cmd::parse();
+    cmd::check_for_errors(opts);
 }
