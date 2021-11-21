@@ -1,7 +1,6 @@
 [workspace]
 
 members = [
-    "commands",
     "options",
     "um",
     "ums",
