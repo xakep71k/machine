@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "options",
+    "arguments",
     "um",
     "ums",
     "um1",

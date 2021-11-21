@@ -2,7 +2,7 @@ pub mod format;
 pub mod machine;
 
 #[derive(Debug)]
-pub enum Argument {
+pub enum Kind {
     Help,
     Format(format::Kind),
     MachineCommandList,
@@ -10,34 +10,34 @@ pub enum Argument {
     Error { message: String },
 }
 
-pub fn parse() -> Vec<Argument> {
+pub fn parse() -> Vec<Kind> {
     let mut args = std::env::args();
     let _program_name: String = args.next().unwrap();
-    let mut result: Vec<Argument> = Vec::new();
+    let mut result: Vec<Kind> = Vec::new();
     while let Some(arg) = args.next() {
         match &arg[..] {
             "--help" => {
-                result.push(Argument::Help);
+                result.push(Kind::Help);
             }
             "--clist" => {
-                result.push(Argument::MachineCommandList);
+                result.push(Kind::MachineCommandList);
             }
             "--format" => {
                 let arg = match format::parse(args.next()) {
-                    Ok(kind) => Argument::Format(kind),
-                    Err(message) => Argument::Error { message },
+                    Ok(kind) => Kind::Format(kind),
+                    Err(message) => Kind::Error { message },
                 };
                 result.push(arg);
             }
             "--machine-type" => {
                 let arg = match machine::parse_type(args.next()) {
-                    Ok(kind) => Argument::Machine(kind),
-                    Err(message) => Argument::Error { message },
+                    Ok(kind) => Kind::Machine(kind),
+                    Err(message) => Kind::Error { message },
                 };
                 result.push(arg);
             }
             arg => {
-                result.push(Argument::Error {
+                result.push(Kind::Error {
                     message: format!("unknown option '{}'", arg),
                 });
             }

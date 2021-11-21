@@ -3,19 +3,19 @@ mod machine;
 mod memory;
 
 fn main() {
-    let args = options::parse();
+    let args = arguments::parse();
     if args
         .iter()
-        .any(|x| matches!(x, options::Argument::Error { .. }))
+        .any(|x| matches!(x, arguments::Kind::Error { .. }))
     {
         args.iter().for_each(|x| {
-            if let options::Argument::Error { message } = x {
+            if let arguments::Kind::Error { message } = x {
                 eprintln!("{}", message)
             }
         });
         std::process::exit(1);
     }
-    if args.is_empty() || args.iter().any(|x| matches!(x, options::Argument::Help)) {
+    if args.is_empty() || args.iter().any(|x| matches!(x, arguments::Kind::Help)) {
         help::print();
         std::process::exit(0);
     }
