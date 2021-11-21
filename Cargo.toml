@@ -2,6 +2,10 @@
 
 members = [
     "commands",
-    "console",
+    "options",
+    "um",
+    "ums",
+    "um1",
+    "um2",
     "um3",
 ]
