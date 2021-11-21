@@ -7,17 +7,16 @@ pub enum MachineType {
 }
 
 #[derive(Debug)]
-pub enum NumeralSystem {
-    Bin,
-    Dec,
-    Hex,
+pub enum Format {
+    Education,
+    Binary,
 }
 
 #[derive(Debug)]
 pub enum Argument {
     Help,
     AddressSize(usize),
-    NumeralSystem(NumeralSystem),
+    Format(Format),
     MachineCommandList,
     MachineType(MachineType),
     Error { message: String },
@@ -38,8 +37,8 @@ pub fn parse() -> Vec<Argument> {
             "--address-size" => {
                 result.push(parse_address_size(args.next()));
             }
-            "--numeral" => {
-                result.push(parse_numeral_system(args.next()));
+            "--format" => {
+                result.push(parse_format(args.next()));
             }
             "--machine-type" => {
                 result.push(parse_machine_type(args.next()));
@@ -77,7 +76,9 @@ fn check_for_errors(v: &Vec<Argument>) {
 }
 
 pub fn print_help() {
-    println!("Эмулятор учебных машин УМ-1, УМ-2, УМ-3, УМ-С.");
+    println!(
+        "Эмулятор учебных машин УМ-1, УМ-2, УМ-3, УМ-С. См. https://github.com/xakep71k/machine"
+    );
     println!("УМ-3 - трёхадресная учебная машина");
     println!("УМ-2 - двухадресная учебная машина");
     println!("УМ-1 - одноадресная учебная машина");
@@ -88,8 +89,8 @@ pub fn print_help() {
     println!(
         "\t--numeral\tСистема счисления, в которой задаются команды: 2|10|16, по-умолчанию равно 2"
     );
+    println!("\t--format\tВозмжные значения: education|binary. Education - это формат где использется форматирование и команды записаны в десятичной системе счисления, формат текстовый. См. пример ниже. Binary - бинарный формат, состоящий из машиных слов длинной 64 бита, тут используется двоичный бинарный формат. Если формат не указывать, то по умолчанию будет использоваться binary.");
     println!("\t--machine-type\tВозможные значения: UM3|УМ3|УМ-3 или UM2|УМ2|УМ-2 или UM1|УМ1|УМ-1 или UMS|УМС|УМ-С");
-    println!("\t--address-size\tРазмер секции адреса в команде. От данного параметра зависит размер всей команды. Для УМ-3 длина команды это |<КОП>|<A1>|<A2>|<A3>|, для УМ-2 это |<КОП>|<A1>|<A2>|, для УМ-1 это |<КОП>|<A1>|. А1, А2 и А3 это адреса откуда команда получает значения. Для стековой машины (УМ-С) этот параметр игнорируется. Например, --address-size 10, то команда для УМ-3 равна 32, а максимально адресуемая ячейка памяти 1024. Так как A1 = A2 = A3 = 10, то размер команды будет 32 = |КОП=2|А1=10|А2=10|А3=10|, размер КОП всегда равен 2. См. книгу Баула В.Г. - Введение в архитектуру ЭВМ (2003).pdf, страница 10, https://github.com/xakep71k/machines/blob/master/docs/%D0%91%D0%B0%D1%83%D0%BB%D0%B0%20%D0%92.%D0%93.%20-%20%D0%92%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B2%20%D0%B0%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D1%83%20%D0%AD%D0%92%D0%9C%20(2003).pdf")
 }
 
 fn parse_address_size(arg: Option<String>) -> Argument {
@@ -136,22 +137,18 @@ fn parse_machine_type(arg: Option<String>) -> Argument {
     }
 }
 
-fn parse_numeral_system(arg: Option<String>) -> Argument {
-    let wrong_numeral = Argument::Error {
-        message: "wrong numeral system, it must be 2, 10 or 16".to_string(),
-    };
+fn parse_format(arg: Option<String>) -> Argument {
     if let Some(arg) = arg {
-        if let Ok(n) = arg.parse::<u32>() {
-            match n {
-                2 => Argument::NumeralSystem(NumeralSystem::Bin),
-                10 => Argument::NumeralSystem(NumeralSystem::Dec),
-                16 => Argument::NumeralSystem(NumeralSystem::Hex),
-                _ => wrong_numeral,
-            }
-        } else {
-            wrong_numeral
+        match &arg[..] {
+            "education" => Argument::Format(Format::Education),
+            "binary" => Argument::Format(Format::Binary),
+            x => Argument::Error {
+                message: format!("unknown format type '{}'", x),
+            },
         }
     } else {
-        wrong_numeral
+        Argument::Error {
+            message: "format type not specified".to_string(),
+        }
     }
 }
