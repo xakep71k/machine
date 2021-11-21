@@ -1,11 +1,6 @@
 pub mod format;
 pub mod machine;
 
-pub struct Machine {
-    fkind: format::Kind,
-    mkind: machine::Kind,
-}
-
 #[derive(Debug)]
 pub enum Argument {
     Help,
@@ -13,37 +8,6 @@ pub enum Argument {
     MachineCommandList,
     Machine(machine::Kind),
     Error { message: String },
-}
-
-impl Machine {
-    pub fn from_args(args: Vec<Argument>) -> Machine {
-        let fkind = args.iter().find_map(|x| {
-            if let Argument::Format(kind) = x {
-                Some(kind)
-            } else {
-                None
-            }
-        });
-        let mkind = args.iter().find_map(|x| {
-            if let Argument::Machine(kind) = x {
-                Some(kind)
-            } else {
-                None
-            }
-        });
-        Machine {
-            fkind: fkind.cloned().unwrap_or(format::Kind::Binary),
-            mkind: mkind.cloned().unwrap_or(machine::Kind::UMS),
-        }
-    }
-
-    pub fn format_kind(&self) -> &format::Kind {
-        &self.fkind
-    }
-
-    pub fn machine_kind(&self) -> &machine::Kind {
-        &self.mkind
-    }
 }
 
 pub fn parse() -> Vec<Argument> {

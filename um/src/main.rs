@@ -19,7 +19,7 @@ fn main() {
         help::print();
         std::process::exit(0);
     }
-    let opts = options::Machine::from_args(args);
+    let opts = machine::Opts::from_args(args);
     let mut memory: Vec<u64> = memory::load_from_stdin(opts.format_kind());
     let execute = machine::create(opts.machine_kind());
     execute(&mut memory);
