@@ -6,8 +6,3 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-arguments = { path = "../arguments" }
-ums = { path = "../ums" }
-um1 = { path = "../um1" }
-um2 = { path = "../um2" }
-um3 = { path = "../um3" }

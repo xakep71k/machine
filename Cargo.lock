@@ -3,19 +3,15 @@
 version = 3
 
 [[package]]
-name = "arguments"
+name = "exe"
 version = "0.1.0"
+dependencies = [
+ "um",
+]
 
 [[package]]
 name = "um"
 version = "0.1.0"
-dependencies = [
- "arguments",
- "um1",
- "um2",
- "um3",
- "ums",
-]
 
 [[package]]
 name = "um1"
@@ -28,6 +24,9 @@ version = "0.1.0"
 [[package]]
 name = "um3"
 version = "0.1.0"
+dependencies = [
+ "um",
+]
 
 [[package]]
 name = "ums"
