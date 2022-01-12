@@ -1,9 +1,9 @@
 pub fn execute(memory: &mut [u64]) {
     let mut addr_counter = 0;
+    let machine = Machine::new();
 
     while addr_counter < memory.len() {
         let (op, addr1, addr2, addr3) = next_command(memory[addr_counter]);
-        let machine = Machine::new();
         let command = Command {
             addr1,
             addr2,
@@ -47,7 +47,7 @@ impl Machine {
         memory[command.addr1] = (f1 - f2).to_bits();
     }
 
-    fn read_integer_from_stdin(self, memory: &mut [u64], command: &Command) {
+    fn read_integer_from_stdin(&self, memory: &mut [u64], command: &Command) {
         let mut buffer = String::new();
         let mut arg2 = command.addr2;
         let mut addr1 = command.addr1;
