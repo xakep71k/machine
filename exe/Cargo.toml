@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 um = { path = "../um" }
+um3 = { path = "../um3" }
