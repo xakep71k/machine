@@ -1,8 +1,5 @@
 pub struct Data<'a> {
     pub memory: &'a mut [u64],
-    pub arg1: u64,
-    pub arg2: u64,
-    pub arg3: u64,
     pub addr1: usize,
     pub addr2: usize,
     pub addr3: usize,

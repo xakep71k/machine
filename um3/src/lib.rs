@@ -10,13 +10,10 @@ pub fn execute(memory: &mut [u64]) {
         // println!("addr1 {:016x}", addr1);
         // println!("addr2 {:016x}", addr2);
         // println!("addr3 {:016x}", addr3);
-        let (arg1, arg2, arg3) = (memory[addr1], memory[addr2], memory[addr3]);
+        // let (arg1, arg2, arg3) = (memory[addr1], memory[addr2], memory[addr3]);
 
         let data = commands::Data {
             memory,
-            arg1,
-            arg2,
-            arg3,
             addr1,
             addr2,
             addr3,
