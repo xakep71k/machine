@@ -1,27 +1,21 @@
-mod commands;
-
 pub fn execute(memory: &mut [u64]) {
     let mut addr_counter = 0;
 
     while addr_counter < memory.len() {
-        // println!("{:016x}", memory[addr_counter]);
         let (op, addr1, addr2, addr3) = next_command(memory[addr_counter]);
-        // println!("op {:016x}", op);
-        // println!("addr1 {:016x}", addr1);
-        // println!("addr2 {:016x}", addr2);
-        // println!("addr3 {:016x}", addr3);
-        // let (arg1, arg2, arg3) = (memory[addr1], memory[addr2], memory[addr3]);
-
-        let data = commands::Data {
-            memory,
+        let machine = Machine::new();
+        let command = Command {
             addr1,
             addr2,
             addr3,
         };
 
         match op {
+            0x2 => {
+                machine.substruction_float(memory, &command);
+            }
             0x6 => {
-                commands::read_integer(data);
+                machine.read_integer_from_stdin(memory, &command);
             }
             0x01F => {
                 break;
@@ -31,6 +25,67 @@ pub fn execute(memory: &mut [u64]) {
             }
         }
         addr_counter += 1;
+    }
+}
+
+struct Command {
+    addr1: usize,
+    addr2: usize,
+    addr3: usize,
+}
+
+struct Machine {}
+
+impl Machine {
+    fn new() -> Machine {
+        Machine {}
+    }
+
+    fn substruction_float(&self, memory: &mut [u64], command: &Command) {
+        let f1 = f64::from_bits(memory[command.addr2]);
+        let f2 = f64::from_bits(memory[command.addr3]);
+        memory[command.addr1] = (f1 - f2).to_bits();
+    }
+
+    fn read_integer_from_stdin(self, memory: &mut [u64], command: &Command) {
+        let mut buffer = String::new();
+        let mut arg2 = command.addr2;
+        let mut addr1 = command.addr1;
+
+        while arg2 != 0 {
+            buffer.clear();
+            let res = std::io::stdin().read_line(&mut buffer);
+            if res.is_err() {
+                memory[command.addr3] = 1;
+                break;
+            }
+
+            let res = read_integer_as_bits(buffer.trim());
+            if res.is_err() {
+                memory[command.addr3] = 1;
+                break;
+            }
+
+            let res = res.unwrap();
+            memory[addr1] = res;
+            memory[command.addr3] = 0;
+            arg2 -= 1;
+            addr1 += 1;
+        }
+    }
+}
+
+fn read_integer_as_bits(input: &str) -> Result<u64, String> {
+    if input.starts_with('-') {
+        match input.parse::<i64>() {
+            Ok(v) => Ok(v as u64),
+            Err(err) => Err(err.to_string()),
+        }
+    } else {
+        match input.parse::<u64>() {
+            Ok(v) => Ok(v),
+            Err(err) => Err(err.to_string()),
+        }
     }
 }
 
