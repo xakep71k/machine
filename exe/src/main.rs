@@ -14,7 +14,7 @@ fn main() {
             um3::execute(&mut bin_memory);
         }
         _ => {
-            eprintln!("unknown type {}", machine_type);
+            eprintln!("unknown type '{}'", machine_type);
             std::process::exit(1);
         }
     }
@@ -25,10 +25,13 @@ fn read_memory_from_file(filename: &str) -> (String, Vec<char>) {
     let mut input: Vec<String> = Vec::new();
 
     for line in std::io::BufReader::new(file).lines() {
-        input.push(line.unwrap().split(';').next().unwrap().trim().to_string());
+        let s = line.unwrap().split(';').next().unwrap().trim().to_string();
+        if !s.is_empty() {
+            input.push(s);
+        }
     }
 
-    let machine_type: String = input[0].chars().take(2).collect();
+    let machine_type: String = input.first().unwrap().chars().take(2).collect();
     let input = input
         .join("")
         .chars()

@@ -71,11 +71,17 @@ struct Command {
 
 struct Machine {
     flag: u64,
+    // panic: u64,
+    err: u64,
 }
 
 impl Machine {
     fn new() -> Machine {
-        Machine { flag: 0 }
+        Machine {
+            flag: 0,
+            // panic: 0,
+            err: 0,
+        }
     }
 
     fn set_flag(&mut self, v: u64) {
@@ -88,7 +94,7 @@ impl Machine {
     }
 
     fn copy_memory(&self, memory: &mut [u64], command: &Command) {
-        memory[command.addr1] = memory[command.addr3];
+        memory[command.addr1] = memory[command.addr2];
     }
 
     fn cast_int_to_float(&self, memory: &mut [u64], command: &Command) {
@@ -167,7 +173,7 @@ impl Machine {
         memory[command.addr1] = (f1 * f2).to_bits();
     }
 
-    fn read_integer_from_stdin(&self, memory: &mut [u64], command: &Command) {
+    fn read_integer_from_stdin(&mut self, memory: &mut [u64], command: &Command) {
         let mut buffer = String::new();
         let mut arg2 = command.addr2;
         let mut addr1 = command.addr1;
@@ -176,13 +182,13 @@ impl Machine {
             buffer.clear();
             let res = std::io::stdin().read_line(&mut buffer);
             if res.is_err() {
-                memory[command.addr3] = 1;
+                self.err = 1;
                 break;
             }
 
             let res = read_integer_as_bits(buffer.trim());
             if res.is_err() {
-                memory[command.addr3] = 1;
+                self.err = 1;
                 break;
             }
 
