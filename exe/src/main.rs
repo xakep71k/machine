@@ -10,6 +10,9 @@ fn main() {
     let mut bin_memory = text_to_bin_memory(&text_memory);
 
     match &machine_type[..] {
+        "02" => {
+            um2::execute(&mut bin_memory);
+        }
         "03" => {
             um3::execute(&mut bin_memory);
         }
