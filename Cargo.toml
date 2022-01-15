@@ -2,7 +2,6 @@
 
 members = [
     "exe",
-    "um",
     "ums",
     "um1",
     "um2",

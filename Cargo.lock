@@ -6,14 +6,9 @@ version = 3
 name = "exe"
 version = "0.1.0"
 dependencies = [
- "um",
  "um2",
  "um3",
 ]
-
-[[package]]
-name = "um"
-version = "0.1.0"
 
 [[package]]
 name = "um1"
@@ -26,9 +21,6 @@ version = "0.1.0"
 [[package]]
 name = "um3"
 version = "0.1.0"
-dependencies = [
- "um",
-]
 
 [[package]]
 name = "ums"
