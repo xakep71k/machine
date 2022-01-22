@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "exe",
+    "main",
     "ums",
     "um1",
     "um2",
