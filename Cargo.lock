@@ -6,6 +6,7 @@ version = 3
 name = "exe"
 version = "0.1.0"
 dependencies = [
+ "um1",
  "um2",
  "um3",
 ]
