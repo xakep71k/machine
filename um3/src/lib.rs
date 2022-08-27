@@ -45,6 +45,9 @@ pub fn execute(memory: &mut [u64]) {
             0xF => {
                 machine.write_float(memory, &command);
             }
+            0x10 => {
+                machine.write_int(memory, &command);
+            }
             0x13 => {
                 addr_counter = machine.condition_jump(&command);
                 continue;
@@ -126,6 +129,18 @@ impl Machine {
         let f1 = f64::from_bits(memory[command.addr2]);
         let f2 = f64::from_bits(memory[command.addr3]);
         memory[command.addr1] = (f1 - f2).to_bits();
+    }
+
+    fn write_int(&self, memory: &mut [u64], command: &Command) {
+        let mut arg2 = command.addr2;
+        let mut addr1 = command.addr1;
+
+        while arg2 != 0 {
+            let i1 = memory[addr1] as i64;
+            println!("{}", i1);
+            arg2 -= 1;
+            addr1 += 1;
+        }
     }
 
     fn write_float(&self, memory: &mut [u64], command: &Command) {
