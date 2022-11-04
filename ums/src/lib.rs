@@ -44,6 +44,9 @@ pub fn execute(memory: &mut [u64]) {
             0xF => {
                 machine.write_float();
             }
+            0x10 => {
+                machine.write_int();
+            }
             0x15 => {
                 let (jump, new_addr_counter) = machine.condition_jump_more(&command);
                 if jump {
@@ -174,6 +177,15 @@ impl Machine {
 
         while count != 0 {
             println!("{}", f64::from_bits(self.stack.pop().unwrap()));
+            count -= 1;
+        }
+    }
+
+    fn write_int(&mut self) {
+        let mut count = self.stack.pop().unwrap();
+
+        while count != 0 {
+            println!("{}", self.stack.pop().unwrap() as i64);
             count -= 1;
         }
     }
